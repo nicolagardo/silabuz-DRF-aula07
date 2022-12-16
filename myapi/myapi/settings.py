@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "todos",
     'rest_framework_simplejwt',
+    "rest_framework.authtoken",
     "django_filters",
     "users"
 ]
@@ -140,6 +141,16 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASS': [
+        # 'rest_framework.throttling.AnonRateThrottle',
+        # 'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon':'1/minute',
+        'user':'1/minute',
+        'get' :'1/minute'
+    }
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'rest_framework_simplejwt.authentication.JWTAuthentication',
     # ),
@@ -152,3 +163,8 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = "users.User"
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}

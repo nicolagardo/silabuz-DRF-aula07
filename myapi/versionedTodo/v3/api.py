@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .pagination import StandardResultsSetPagination
 from rest_framework import viewsets, filters 
 
+from rest_framework.throttling import UserRateThrottle
 class TodoViewSet(viewsets.ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -13,3 +14,6 @@ class TodoViewSet(viewsets.ModelViewSet):
 
     search_fields = ['title', 'body']
     ordering = ('-id')
+
+    throttle_classes = [UserRateThrottle]
+    # throttle_scope = 'get'

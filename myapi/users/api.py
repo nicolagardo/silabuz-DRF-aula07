@@ -12,7 +12,7 @@ from rest_framework.mixins import (
     UpdateModelMixin)
 
 from .serializers import UserSerializer, SignUpSerializer, GetUserSerializer
-from .models import Users
+from .models import Users, User
 from .tokens import create_jwt_pair_for_user
 
 # class UserViewSet(viewsets.ModelViewSet):
@@ -72,5 +72,19 @@ class LoginView(APIView):
         user = authenticate(email= email, password= password)
         if user is not None:
             tokens = create_jwt_pair_for_user(user)
+            resp = {
+                "message": " Logeado correctamente",
+                "email": email,
+                "tokens": tokens
+            }
+            return Response(data = resp, status=200 )
+        else:
+            return Response({"message":"Correo inválido o contaseña incorrecta"})
 
-            return ()
+    def get(self, request: Request):
+        resp = {"user": f'{request.user}', "auth":str(request.auth)}
+        return Response(data= resp, status=200)
+
+class GetUsers(viewsets.ReadOnlyModelViewSet):
+    serializer_class = GetUserSerializer
+    queryset = User.objects.all()
